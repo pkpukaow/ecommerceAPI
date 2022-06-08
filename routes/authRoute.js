@@ -8,11 +8,11 @@ const upload = require("../middlewares/upload");
 const router = express.Router();
 
 router.get("/me", authenticate, authController.getMe);
-router.get("/role", authenticate, authController.getRole);
+router.get("/user", authenticate, authController.getUser);
 router.post("/login", authController.login);
 router.post("/signup", authController.signup);
-router.patch("/:id", authController.updateUser);
-router.patch("/:id", upload.single("image"), authController.updateUserPic);
+router.patch("/:id", upload.single("image"), authController.updateUser);
+router.patch("/password/:id", authController.updateUserPassword);
 router.get("/", itemController.getAllItems);
 
 module.exports = router;

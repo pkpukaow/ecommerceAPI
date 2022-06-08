@@ -1,4 +1,5 @@
-const validator = require("validator");
+const fs = require("fs");
+const cloudinary = require("../utils/cloudinary");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const createError = require("../utils/createError");
@@ -65,7 +66,7 @@ exports.signup = async (req, res, next) => {
       createError("phoneNumber is required", 400);
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 8);
     const user = await User.create({
       firstName,
       lastName,
@@ -89,10 +90,9 @@ exports.getMe = async (req, res, next) => {
     next(err);
   }
 };
-
-exports.getRole = async (req, res, next) => {
+exports.getUser = async (req, res, next) => {
   try {
-    res.status(200).json({ role: req.user.role });
+    res.status(200).json({ user: req.user });
   } catch (err) {
     next(err);
   }
@@ -102,21 +102,57 @@ exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { firstName, lastName, email, phoneNumber } = req.body;
-
     const user = await User.findOne({ where: { id } });
     if (!user) {
       createError("user not found", 404);
     }
+    let image;
+    if (req.file) {
+      if (user.profilePic) {
+        const splited = post.image.split("/");
+        const publicId = splited[splited.length - 1].split(".")[0];
+        await cloudinary.destroy(publicId);
+      }
+      const result = await cloudinary.upload(req.file.path);
+      image = result.secure_url;
+    }
+    await user.update({
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      profilePic: image,
+    });
+    res.status(200).json({ message: " update success" });
   } catch (err) {
     next(err);
+  } finally {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
   }
 };
-exports.updateUserPic = async (req, res, next) => {
+
+exports.updateUserPassword = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const {} = req.file;
-
+    const { oldPassword, newPassword, confirmPassword } = req.body;
     const user = await User.findOne({ where: { id } });
+    if (!user) {
+      createError("user not found", 404);
+    }
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      createError("old password is not match", 400);
+    }
+    if (newPassword !== confirmPassword) {
+      createError("password is not match", 400);
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 8);
+    await user.update({
+      password: hashedPassword,
+    });
+    res.status(200).json({ message: "update success" });
   } catch (err) {
     next(err);
   }
