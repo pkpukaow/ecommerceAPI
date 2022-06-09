@@ -100,7 +100,7 @@ exports.getUser = async (req, res, next) => {
 
 exports.updateUser = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.user;
     const { firstName, lastName, email, phoneNumber } = req.body;
     const user = await User.findOne({ where: { id } });
     if (!user) {
@@ -109,7 +109,7 @@ exports.updateUser = async (req, res, next) => {
     let image;
     if (req.file) {
       if (user.profilePic) {
-        const splited = post.image.split("/");
+        const splited = user.profilePic.split("/");
         const publicId = splited[splited.length - 1].split(".")[0];
         await cloudinary.destroy(publicId);
       }
@@ -135,17 +135,18 @@ exports.updateUser = async (req, res, next) => {
 
 exports.updateUserPassword = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const { id } = req.user;
+    const { currentPassword, newPassword, confirmNewPassword } = req.body;
     const user = await User.findOne({ where: { id } });
     if (!user) {
-      createError("user not found", 404);
+      createError("user not found", 401);
     }
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    console.log(user);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      createError("old password is not match", 400);
+      createError("current is wrong", 400);
     }
-    if (newPassword !== confirmPassword) {
+    if (newPassword !== confirmNewPassword) {
       createError("password is not match", 400);
     }
     const hashedPassword = await bcrypt.hash(newPassword, 8);
