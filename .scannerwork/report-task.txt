@@ -1,0 +1,6 @@
+projectKey=PKlnwzaBack
+serverUrl=http://test.careervio.com:9000
+serverVersion=9.5.0.56709
+dashboardUrl=http://test.careervio.com:9000/dashboard?id=PKlnwzaBack
+ceTaskId=AYFgbQgaTaKKyx5yUMla
+ceTaskUrl=http://test.careervio.com:9000/api/ce/task?id=AYFgbQgaTaKKyx5yUMla

@@ -101,7 +101,7 @@ exports.getUser = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.user;
-    const { firstName, lastName, email, phoneNumber } = req.body;
+    const { firstName, lastName, address, email, phoneNumber } = req.body;
     const user = await User.findOne({ where: { id } });
     if (!user) {
       createError("user not found", 404);
@@ -120,6 +120,7 @@ exports.updateUser = async (req, res, next) => {
       firstName,
       lastName,
       email,
+      address,
       phoneNumber,
       profilePic: image,
     });
