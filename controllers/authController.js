@@ -90,6 +90,7 @@ exports.getMe = async (req, res, next) => {
     next(err);
   }
 };
+
 exports.getUser = async (req, res, next) => {
   try {
     res.status(200).json({ user: req.user });
@@ -170,6 +171,10 @@ exports.updateUserAddress = async (req, res, next) => {
     if (!address) {
       createError("address is required", 400);
     }
+
+    await user.update({
+      address,
+    });
 
     res.status(200).json({ message: "update success" });
   } catch (err) {

@@ -148,16 +148,6 @@ exports.updateItem = async (req, res, next) => {
   }
 };
 
-exports.updateItemPicture = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-
-    const item = await Item.findOne({ where: { id } });
-  } catch (err) {
-    next(err);
-  }
-};
-
 exports.deleteItem = async (req, res, next) => {
   try {
     const { id } = req.params;

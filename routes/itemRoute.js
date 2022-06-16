@@ -17,7 +17,6 @@ router.post(
   itemController.createItem
 );
 router.patch("/:id", isAdmin, itemController.updateItem);
-router.patch("/images/:id", isAdmin, itemController.updateItemPicture);
 router.delete("/:id", isAdmin, itemController.deleteItem);
 router.post("/:itemId/like", itemController.createLikeItem);
 router.delete("/:itemId/like", itemController.deleteLikeItem);

@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       numberOfItem: DataTypes.INTEGER,
       totalPrice: DataTypes.INTEGER,
       slipUrl: DataTypes.STRING,
+      customerAddress: DataTypes.STRING,
       status: {
         type: DataTypes.ENUM("pending", "success", "failed"),
         defaultValue: "pending",
