@@ -13,6 +13,7 @@ router.post("/signup", authController.signup);
 router.get("/me", authenticate, authController.getMe);
 router.get("/user", authenticate, authController.getUser);
 router.patch("/password", authenticate, authController.updateUserPassword);
+router.patch("/address", authenticate, authController.updateUserAddress);
 router.patch(
   "/update",
   authenticate,

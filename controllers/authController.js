@@ -142,7 +142,6 @@ exports.updateUserPassword = async (req, res, next) => {
     if (!user) {
       createError("user not found", 401);
     }
-    console.log(user);
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       createError("current is wrong", 400);
@@ -154,6 +153,24 @@ exports.updateUserPassword = async (req, res, next) => {
     await user.update({
       password: hashedPassword,
     });
+    res.status(200).json({ message: "update success" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateUserAddress = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { address } = req.body;
+    const user = await User.findOne({ where: { id } });
+    if (!user) {
+      createError("user not found", 401);
+    }
+    if (!address) {
+      createError("address is required", 400);
+    }
+
     res.status(200).json({ message: "update success" });
   } catch (err) {
     next(err);

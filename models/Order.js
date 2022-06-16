@@ -4,6 +4,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       numberOfItem: DataTypes.INTEGER,
       totalPrice: DataTypes.INTEGER,
+      slipUrl: DataTypes.STRING,
+      status: {
+        type: DataTypes.ENUM("pending", "success", "failed"),
+        defaultValue: "pending",
+      },
     },
     {
       underscored: true,
@@ -14,13 +19,6 @@ module.exports = (sequelize, DataTypes) => {
     Order.belongsTo(models.User, {
       foreignKey: {
         name: "userId",
-        allowNull: false,
-      },
-    });
-
-    Order.hasOne(models.Transaction, {
-      foreignKey: {
-        name: "orderId",
         allowNull: false,
       },
     });
