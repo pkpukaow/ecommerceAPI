@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "itemId",
         allowNull: false,
       },
+      onDelete: "CASCADE",
     });
   };
 

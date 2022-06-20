@@ -7,11 +7,8 @@ const cartController = require("../controllers/cartController");
 const router = express.Router();
 
 router.get("/", isAdmin, cartController.getAllOrder);
-router.post(
-  "/order",
-  upload.single("slipUrl"),
-  isAdmin,
-  cartController.createOrder
-);
+router.get("/me", cartController.getOrderById);
+router.post("/order", upload.single("slipUrl"), cartController.createOrder);
+router.patch("/", isAdmin, cartController.updateOrderStatus);
 
 module.exports = router;
